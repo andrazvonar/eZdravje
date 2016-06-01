@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>eZdravje :: 4. DN :: OIS 2015/2016</title>
   <link href="knjiznice/css/bootstrap.min.css" rel="stylesheet">
+  <link href="knjiznice/css/w3.css" rel="stylesheet">
+  <link href="knjiznice/css/style.css" rel="stylesheet">
   <style>
-    body {padding-top: 70px;}
+    body {
+      padding-top: 70px;
+    }
   </style>
   <script src="knjiznice/js/jquery-2.2.3.min.js"></script>
   <script src="knjiznice/js/bootstrap.min.js"></script>
   <script src="knjiznice/js/koda.js"></script>
 </head>
+
 <body>
 
   <!-- ZAČETEK: Menujska vrstica na vrhu spletne strani -->
@@ -40,11 +46,77 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
-        <p class="lead"><strong>TO-DO</strong>: Na tem mestu implementirajte vašo aplikacijo.</p>
+        
+        <div class="w3-container w3-red w3-center w3-padding-32">
+          <div id="podatki" class="verticalLine">
+            <div id="BMI" class="w3-padding-vertical8" style="padding-bottom:10px">
+              <h3 style="padding-left:6px">Indeks telesne mase</h3>
+              <h1 style="font-size:370%">18.5</h1>
+            </div>
+            <div id="BMIchange">
+              <h4>Sprememba</h4>
+              <h1>6%</h1>
+            </div>
+          </div>
+        </div>
+
+        <div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
+
+          <div id="vsebina">
+
+            <div id="prijava" class="w3-padding-ver-32" align=left style="padding-bottom:48px">
+              <h2 style="padding-bottom:5px">Prijava</h2>
+              <div>
+                <input id="EHRid-vnos" class="w3-input w3-light-grey" type="text" placeholder="EHR id">
+                <div class=" w3-padding-16">
+                  <div class="w3-dropdown-hover">
+                    <button class="w3-btn w3-red">Izbira stranke</button>
+                    <div class="w3-dropdown-content w3-border">
+                      <a href="javascript:void(0);" onclick="napolniPoljeEHR()">Stranka 1</a>
+                      <a href="#">Stranka 2</a>
+                      <a href="#">Stranka 3</a>
+                    </div>
+                  </div>
+                  <button id="prijava-btn" class="w3-btn w3-red">Prijavi se</button>
+                </div>
+              </div>
+            </div>
+
+            <div id="vnos" class="w3-padding-ver-32" align=left>
+              <h2 style="padding-bottom:5px">Vnos podatkov</h2>
+              <div>
+                <input id="EHRid-vnos" class="w3-input w3-light-grey" type="text" placeholder="Telesna masa">
+                <input id="EHRid-vnos" class="w3-input w3-light-grey" type="text" placeholder="Višina" style="padding-top:20px">
+                <div class=" w3-padding-16">
+                  <button id="prijava-btn" class="w3-btn w3-red">Dodaj vnos</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div id="twitter">
+            <a class="twitter-timeline" href="https://twitter.com/hashtag/losingweight" data-widget-id="738097327538380802">#losingweight Tweets</a>
+            <script>
+              ! function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0],
+                  p = /^http:/.test(d.location) ? 'http' : 'https';
+                if (!d.getElementById(id)) {
+                  js = d.createElement(s);
+                  js.id = id;
+                  js.src = p + "://platform.twitter.com/widgets.js";
+                  fjs.parentNode.insertBefore(js, fjs);
+                }
+              }(document, "script", "twitter-wjs");
+            </script>
+          </div>
+          
+        </div>
       </div>
     </div>
   </div>
   <!-- KONEC: Vsebina aplikacije -->
 
 </body>
+
 </html>

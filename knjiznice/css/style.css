@@ -1,0 +1,19 @@
+#podatki {
+    float: right;
+    width: 25%;
+}
+
+#vsebina {
+    float: left;
+    width: 45%;
+}
+
+#twitter {
+    margin-left: 45;
+    float: right;
+    width: 40%;
+}
+
+.verticalLine {
+    border-left: thin solid #ffffff;
+}
