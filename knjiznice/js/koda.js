@@ -448,6 +448,7 @@ function prijavaUporabnika() {
         document.getElementById("kartica").style.display = "block";
         document.getElementById("kartica-pad").style.display = "block";
         document.getElementById("prijava").style.display = "none";
+        document.getElementById("vnos").style.display = "block";
     });
 
 
@@ -499,6 +500,7 @@ function odjava() {
     CURRENTID = "";
     document.getElementById("kartica").style.display = "none";
     document.getElementById("kartica-pad").style.display = "none";
+    document.getElementById("vnos").style.display = "none";
     document.getElementById("prijava").style.display = "block";
     document.getElementById("trenutni-BMI").innerHTML = "--.-";
     document.getElementById("BMI-sprememba").innerHTML = "--%";
