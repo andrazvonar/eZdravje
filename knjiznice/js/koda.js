@@ -204,6 +204,7 @@ function dodajMeritve(ehrId, datumInUra, telesnaTeza, telesnaVisina, merilec) {
               res.meta.href + ".</span>");
 		    },
 		    error: function(err) {
+		        console.log(err);
 		    	$("#dodajMeritveVitalnihZnakovSporocilo").html(
             "<span class='obvestilo label label-danger fade-in'>Napaka '" +
             JSON.parse(err.responseText).userMessage + "'!");
@@ -313,7 +314,7 @@ function napolniPoljeEHR(st) {
     document.getElementById("prijava-btn").focus();
 }
 
-var CURRENTID;
+var CURRENTID = "f12baecf-04ca-4705-ab14-6d0c3367ed4b";
 
 function prijavaUporabnika() {
     CURRENTID = document.getElementById("EHRid-vnos").value;
@@ -352,6 +353,6 @@ function dodajNovoMeritev() {
     var telesnaTeza = document.getElementById("masa-vnos").value;
     var telesnaVisina = document.getElementById("visina-vnos").value;
     var d = new Date();
-    var date = d.getFullYear()+"."+d.getMonth()+"."+d.getDay()+"T"+d.getMinutes()+d.getMinutes();
+    var date = d.getFullYear()+"-"+d.getMonth()+"-"+d.getDay()+"T"+d.getMinutes()+":"+d.getMinutes();
     dodajMeritve(CURRENTID, date, telesnaTeza, telesnaVisina, "Samo");
 }
