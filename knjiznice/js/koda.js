@@ -248,14 +248,15 @@ function preberiEHRodBolnika(ehrId, callback) {
     }
 }
 
-function preberiMeritve(ehrId, callback) {
+function preberiMeritveTeze(ehrId, callback) {
     var sessionId = getSessionId();
     var tip = $("#preberiTipZaVitalneZnake").val();
 
     if (!ehrId || ehrId.trim().length == 0) {
         $("#preberiMeritveVitalnihZnakovSporocilo").html("<span class='obvestilo " +
             "label label-warning fade-in'>Prosim vnesite zahtevan podatek!");
-    } else {
+    }
+    else {
         $.ajax({
             url: baseUrl + "/demographics/ehr/" + ehrId + "/party",
             type: 'GET',
@@ -274,7 +275,56 @@ function preberiMeritve(ehrId, callback) {
                         "Ehr-Session": sessionId
                     },
                     success: function(res) {
-                        console.log("IRAN");
+                        if (res.length > 0) {
+                            callback(res);
+
+                        }
+                        else {
+                            $("#preberiMeritveVitalnihZnakovSporocilo").html(
+                                "<span class='obvestilo label label-warning fade-in'>" +
+                                "Ni podatkov!</span>");
+                        }
+                    },
+                    error: function(err) {
+                        $("#preberiMeritveVitalnihZnakovSporocilo").html(
+                            "<span class='obvestilo label label-danger fade-in'>Napaka '" +
+                            JSON.parse(err.responseText).userMessage + "'!");
+                    }
+                });
+            },
+            error: function(err) {
+                console.log("Napaka");
+                $("#preberiMeritveVitalnihZnakovSporocilo").html(
+                    "<span class='obvestilo label label-danger fade-in'>Napaka '" +
+                    JSON.parse(err.responseText).userMessage + "'!");
+            }
+        });
+    }
+}
+
+function preberiMeritveVisine(ehrId, callback) {
+    var sessionId = getSessionId();
+    var tip = $("#preberiTipZaVitalneZnake").val();
+
+    if (!ehrId || ehrId.trim().length == 0) {
+        $("#preberiMeritveVitalnihZnakovSporocilo").html("<span class='obvestilo " +
+            "label label-warning fade-in'>Prosim vnesite zahtevan podatek!");
+    }
+    else {
+        $.ajax({
+            url: baseUrl + "/demographics/ehr/" + ehrId + "/party",
+            type: 'GET',
+            headers: {
+                "Ehr-Session": sessionId
+            },
+            success: function(data) {
+                $.ajax({
+                    url: baseUrl + "/view/" + ehrId + "/" + "height",
+                    type: 'GET',
+                    headers: {
+                        "Ehr-Session": sessionId
+                    },
+                    success: function(res) {
                         if (res.length > 0) {
                             callback(res);
 
@@ -377,35 +427,56 @@ var CURRENTID = "f12baecf-04ca-4705-ab14-6d0c3367ed4b";
 function prijavaUporabnika() {
     CURRENTID = document.getElementById("EHRid-vnos").value;
     preberiEHRodBolnika(CURRENTID, function(party) {
-        posodobiPodatke([10, 20, 30, 40, 70, 60], 186);
         document.getElementById("ime").innerHTML = party.firstNames + " " + party.lastNames;
         document.getElementById("kartica").style.display = "block";
         document.getElementById("kartica-pad").style.display = "block";
         document.getElementById("prijava").style.display = "none";
     });
-    
+
+
     var teze = [0, 0, 0, 0, 0, 0];
-    preberiMeritve(CURRENTID, function(results) {
+    preberiMeritveTeze(CURRENTID, function(results) {
         console.log(results);
-        var zadnja = results.length-1;
-        for (var i = results.length - 7; i < results.length - 1; i++) {
-            teze[i] = results[i].weight;
+        var zadnja = results.length - 1;
+        if (results.length >= 6) {
+            for (var i = 0; i < 6; i++) {
+                teze[i] = results[i].weight;
+            }
         }
-        var bmi = BMI(teze[5], 186)
-        document.getElementById("k-bmi").innerHTML = bmi;
-        document.getElementById("k-visina").innerHTML = "20";
-        document.getElementById("k-teza").innerHTML = teze[5];
-        if (bmi < 18.5) {
+        else {
+            for (var i = 0; i < results.length; i++) {
+                teze[i] = results[i].weight;
+            }
+        }
+
+        preberiMeritveVisine(CURRENTID, function(visine) {
+            console.log(results);
+            var visina = visine[0].height;
+            var bmi = BMI(teze[0], visina)
+            document.getElementById("k-bmi").innerHTML = bmi;
+            document.getElementById("k-visina").innerHTML = visina + "cm";
+            document.getElementById("trenutni-BMI").innerHTML = bmi;
+            document.getElementById("BMI-sprememba").innerHTML = Math.abs(Math.round((bmi / BMI(teze[1], visina) - 1) * 100)) + "%";
+            
+            if (bmi < 18.5) {
             document.getElementById("k-ocena").innerHTML = "Podhranjenost";
-        } else if (bmi < 24.5) {
+        }
+        else if (bmi < 24.5) {
             document.getElementById("k-ocena").innerHTML = "Normalno";
-        } else if (bmi < 29.9) {
+        }
+        else if (bmi < 29.9) {
             document.getElementById("k-ocena").innerHTML = "Povišana teža";
-        } else {
+        }
+        else {
             document.getElementById("k-ocena").innerHTML = "Debeluhar"
         }
-        document.getElementById("k-datum").innerHTML = results[results.length - 1].time.slice(0,10);
-        posodobiPodatke(teze, 186);
+        });
+
+
+        document.getElementById("k-visina").innerHTML = "cm";
+        document.getElementById("k-teza").innerHTML = teze[0] + "kg";
+        document.getElementById("k-datum").innerHTML = results[0].time.slice(0, 10);
+        generateChart(teze.reverse());
     });
 }
 
@@ -416,15 +487,10 @@ function odjava() {
     document.getElementById("prijava").style.display = "block";
     document.getElementById("trenutni-BMI").innerHTML = "--.-";
     document.getElementById("BMI-sprememba").innerHTML = "--%";
-    document.getElementById("EHRid-vnos").innerHTML = "";
+    document.getElementById("EHRid-vnos").value = "";
     generateChart([0, 0, 0, 0, 0, 0]);
 }
 
-function posodobiPodatke(teze, visina) {
-    document.getElementById("trenutni-BMI").innerHTML = BMI(teze[5], visina);
-    document.getElementById("BMI-sprememba").innerHTML = Math.abs(Math.round((BMI(teze[5], visina) / BMI(teze[4], visina) - 1) * 100)) + "%";
-    generateChart(teze);
-}
 
 function BMI(teza, visina) {
     return Math.round((teza / ((visina / 100) * (visina / 100)) * 10)) / 10;
