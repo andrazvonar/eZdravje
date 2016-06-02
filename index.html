@@ -55,11 +55,11 @@
           <div id="podatki" class="verticalLine">
             <div id="BMI" class="w3-padding-vertical8" style="padding-bottom:10px">
               <h3 style="padding-left:6px">Indeks telesne mase</h3>
-              <h1 style="font-size:370%"><label id="trenutni-BMI">18.5</label></h1>
+              <h1 style="font-size:370%"><label id="trenutni-BMI">--.-</label></h1>
             </div>
             <div id="BMIchange">
               <h4>Sprememba</h4>
-              <h1><label id="BMI-sprememba">6%</label></h1>
+              <h1><label id="BMI-sprememba">--%</label></h1>
             </div>
           </div>
         </div>
@@ -68,20 +68,38 @@
 
           <div id="vsebina">
 
+            <div id="kartica" style="display:none" class="w3-card-4">
+
+              <header class="w3-container w3-red">
+                <h1 id="ime"></h1>
+              </header>
+
+              <div class="w3-container w3-padding-8" align="left">
+                <p>Podatki...</p>
+              </div>
+
+              <footer class="w3-container w3-red w3-padding-4">
+                <button align="left" class="w3-btn w3-light-grey" onclick="odjava()">Odjava</button>
+              </footer>
+
+            </div>
+            
+            <div id="kartica-pad" class="w3-padding-16" style="display:none"></div>
+
             <div id="prijava" class="w3-padding-ver-32" align=left style="padding-bottom:48px">
               <h2 style="padding-bottom:5px">Prijava</h2>
               <div>
                 <input id="EHRid-vnos" class="w3-input w3-light-grey" type="text" placeholder="EHR id">
                 <div class=" w3-padding-16">
                   <div class="w3-dropdown-hover">
-                    <button class="w3-btn w3-red">Izbira stranke</button>
+                    <button class="w3-btn w3-red">Izbira uporabnika</button>
                     <div class="w3-dropdown-content w3-border">
-                      <a href="javascript:void(0);" onclick="napolniPoljeEHR(1)">Stranka 1</a>
-                      <a href="#">Stranka 2</a>
-                      <a href="#">Stranka 3</a>
+                      <a href="javascript:void(0);" onclick="napolniPoljeEHR(0)">Uporabnik 1</a>
+                      <a href="javascript:void(0);" onclick="napolniPoljeEHR(1)">Uporabnik 2</a>
+                      <a href="javascript:void(0);" onclick="napolniPoljeEHR(2)">Uporabnik 3</a>
                     </div>
                   </div>
-                  <button id="prijava-btn" class="w3-btn w3-red">Prijavi se</button>
+                  <button id="prijava-btn" class="w3-btn w3-red" onclick="prijavaUporabnika()">Prijavi se</button>
                 </div>
               </div>
             </div>
@@ -100,7 +118,7 @@
           </div>
 
           <div id="twitter">
-            <a class="twitter-timeline" href="https://twitter.com/hashtag/losingweight" data-widget-id="738097327538380802">#losingweight Tweets</a>
+            <a class="twitter-timeline" href="https://twitter.com/hashtag/fitness" data-widget-id="738363148613390340">#fitness Tweets</a>
             <script>
               ! function(d, s, id) {
                 var js, fjs = d.getElementsByTagName(s)[0],

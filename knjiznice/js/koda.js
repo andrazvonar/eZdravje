@@ -85,7 +85,7 @@ function generirajPodatke(stPacienta) {
 
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
 $(document).ready(function() {
-    generateChart([0,0,0,0,0,0]);
+    generateChart([0, 0, 0, 0, 0, 0]);
 });
 
 
@@ -133,8 +133,38 @@ function generiraj() {
     for (var i = 0; i < 3; i++) generirajPodatke(i);
 }
 
+var EHRids = ["ehr1", "ehr2", "ehr3"];
+
 function napolniPoljeEHR(st) {
-    
-    document.getElementById("EHRid-vnos").value = generirajPodatke(st);
+    document.getElementById("EHRid-vnos").value = EHRids[st];
     document.getElementById("prijava-btn").focus();
+}
+
+function prijavaUporabnika() {
+    var id = $('#EHR-vnos');
+    posodobiPodatke([10, 20, 30, 40, 70, 60], 186);
+    document.getElementById("ime").innerHTML = "Andraž Zvonar";
+    document.getElementById("kartica").style.display = "block";
+    document.getElementById("kartica-pad").style.display = "block";
+    document.getElementById("prijava").style.display = "none";
+}
+
+function odjava() {
+    document.getElementById("kartica").style.display = "none";
+    document.getElementById("kartica-pad").style.display = "none";
+    document.getElementById("prijava").style.display = "block";
+    document.getElementById("trenutni-BMI").innerHTML = "--.-";
+    document.getElementById("BMI-sprememba").innerHTML = "--%";
+    document.getElementById("EHRid-vnos").innerHTML = "";
+    generateChart([0, 0, 0, 0, 0, 0]);
+}
+
+function posodobiPodatke(teze, visina) {
+    document.getElementById("trenutni-BMI").innerHTML = BMI(teze[5], visina);
+    document.getElementById("BMI-sprememba").innerHTML = Math.abs(Math.round((BMI(teze[5], visina) / BMI(teze[4], visina) - 1) * 100)) + "%";
+    generateChart(teze);
+}
+
+function BMI(teza, visina) {
+    return Math.round((teza / ((visina / 100) * (visina / 100)) * 10)) / 10;
 }
