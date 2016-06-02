@@ -29,12 +29,12 @@ function getSessionId() {
  * @param stPacienta zaporedna številka pacienta (1, 2 ali 3)
  * @return ehrId generiranega pacienta
  */
-function generirajPodatke(stPacienta) {
-    var ehrId = "";
+function generirajPodatke(stPacienta, callback) {
+    var ehrId;
     var sessionId = getSessionId();
 
     switch (stPacienta) {
-        case 0:
+        case 1:
             $.ajaxSetup({
                 headers: {
                     "Ehr-Session": sessionId
@@ -44,11 +44,11 @@ function generirajPodatke(stPacienta) {
                 url: baseUrl + "/ehr",
                 type: 'POST',
                 success: function(data) {
-                    var ehrId = data.ehrId;
+                    ehrId = data.ehrId;
                     var partyData = {
-                        firstNames: "Jure",
-                        lastNames: "Krajnc",
-                        dateOfBirth: "",
+                        firstNames: "Andraz",
+                        lastNames: "Zvonar",
+                        dateOfBirth: "1996-02-23T18:08",
                         partyAdditionalInfo: [{
                             key: "ehrId",
                             value: ehrId
@@ -64,7 +64,7 @@ function generirajPodatke(stPacienta) {
                                 $("#kreirajSporocilo").html("<span class='obvestilo " +
                                     "label label-success fade-in'>Uspešno kreiran EHR '" +
                                     ehrId + "'.</span>");
-                                $("#preberiEHRid").val(ehrId);
+                                callback(ehrId);
                             }
                         },
                         error: function(err) {
@@ -76,7 +76,91 @@ function generirajPodatke(stPacienta) {
                 }
             });
             break;
-        default:
+
+        case 2:
+            $.ajaxSetup({
+                headers: {
+                    "Ehr-Session": sessionId
+                }
+            });
+            $.ajax({
+                url: baseUrl + "/ehr",
+                type: 'POST',
+                success: function(data) {
+                    ehrId = data.ehrId;
+                    var partyData = {
+                        firstNames: "Andraz",
+                        lastNames: "Zvonar",
+                        dateOfBirth: "1996-02-23T18:08",
+                        partyAdditionalInfo: [{
+                            key: "ehrId",
+                            value: ehrId
+                        }]
+                    };
+                    $.ajax({
+                        url: baseUrl + "/demographics/party",
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(partyData),
+                        success: function(party) {
+                            if (party.action == 'CREATE') {
+                                $("#kreirajSporocilo").html("<span class='obvestilo " +
+                                    "label label-success fade-in'>Uspešno kreiran EHR '" +
+                                    ehrId + "'.</span>");
+                                callback(ehrId);
+                            }
+                        },
+                        error: function(err) {
+                            $("#kreirajSporocilo").html("<span class='obvestilo label " +
+                                "label-danger fade-in'>Napaka '" +
+                                JSON.parse(err.responseText).userMessage + "'!");
+                        }
+                    });
+                }
+            });
+            break;
+
+        case 3:
+            $.ajaxSetup({
+                headers: {
+                    "Ehr-Session": sessionId
+                }
+            });
+            $.ajax({
+                url: baseUrl + "/ehr",
+                type: 'POST',
+                success: function(data) {
+                    ehrId = data.ehrId;
+                    var partyData = {
+                        firstNames: "Andraz",
+                        lastNames: "Zvonar",
+                        dateOfBirth: "1996-02-23T18:08",
+                        partyAdditionalInfo: [{
+                            key: "ehrId",
+                            value: ehrId
+                        }]
+                    };
+                    $.ajax({
+                        url: baseUrl + "/demographics/party",
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(partyData),
+                        success: function(party) {
+                            if (party.action == 'CREATE') {
+                                $("#kreirajSporocilo").html("<span class='obvestilo " +
+                                    "label label-success fade-in'>Uspešno kreiran EHR '" +
+                                    ehrId + "'.</span>");
+                                callback(ehrId);
+                            }
+                        },
+                        error: function(err) {
+                            $("#kreirajSporocilo").html("<span class='obvestilo label " +
+                                "label-danger fade-in'>Napaka '" +
+                                JSON.parse(err.responseText).userMessage + "'!");
+                        }
+                    });
+                }
+            });
     }
 
     return ehrId;
@@ -129,11 +213,21 @@ function generateChart(values) {
     });
 }
 
+var EHRids = ["", "", ""];
+
 function generiraj() {
-    for (var i = 0; i < 3; i++) generirajPodatke(i);
+        generirajPodatke(1, function(ehrId) {
+            EHRids[0] = ehrId;
+        });
+        generirajPodatke(2, function(ehrId) {
+            EHRids[1] = ehrId;
+        });
+        generirajPodatke(3, function(ehrId) {
+            EHRids[2] = ehrId;
+        });
+
 }
 
-var EHRids = ["ehr1", "ehr2", "ehr3"];
 
 function napolniPoljeEHR(st) {
     document.getElementById("EHRid-vnos").value = EHRids[st];
