@@ -14,6 +14,11 @@
     width: 40%;
 }
 
+#graf {
+    float: left;
+    width: 75%;
+}
+
 .verticalLine {
     border-left: thin solid #ffffff;
 }

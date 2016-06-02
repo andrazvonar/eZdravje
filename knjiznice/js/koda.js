@@ -1,4 +1,3 @@
-
 var baseUrl = 'https://rest.ehrscape.com/rest/v1';
 var queryUrl = baseUrl + '/query';
 
@@ -15,7 +14,7 @@ function getSessionId() {
     var response = $.ajax({
         type: "POST",
         url: baseUrl + "/session?username=" + encodeURIComponent(username) +
-                "&password=" + encodeURIComponent(password),
+            "&password=" + encodeURIComponent(password),
         async: false
     });
     return response.responseJSON.sessionId;
@@ -31,16 +30,111 @@ function getSessionId() {
  * @return ehrId generiranega pacienta
  */
 function generirajPodatke(stPacienta) {
-  ehrId = "";
+    var ehrId = "";
+    var sessionId = getSessionId();
 
-  // TODO: Potrebno implementirati
+    switch (stPacienta) {
+        case 0:
+            $.ajaxSetup({
+                headers: {
+                    "Ehr-Session": sessionId
+                }
+            });
+            $.ajax({
+                url: baseUrl + "/ehr",
+                type: 'POST',
+                success: function(data) {
+                    var ehrId = data.ehrId;
+                    var partyData = {
+                        firstNames: "Jure",
+                        lastNames: "Krajnc",
+                        dateOfBirth: "",
+                        partyAdditionalInfo: [{
+                            key: "ehrId",
+                            value: ehrId
+                        }]
+                    };
+                    $.ajax({
+                        url: baseUrl + "/demographics/party",
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(partyData),
+                        success: function(party) {
+                            if (party.action == 'CREATE') {
+                                $("#kreirajSporocilo").html("<span class='obvestilo " +
+                                    "label label-success fade-in'>Uspešno kreiran EHR '" +
+                                    ehrId + "'.</span>");
+                                $("#preberiEHRid").val(ehrId);
+                            }
+                        },
+                        error: function(err) {
+                            $("#kreirajSporocilo").html("<span class='obvestilo label " +
+                                "label-danger fade-in'>Napaka '" +
+                                JSON.parse(err.responseText).userMessage + "'!");
+                        }
+                    });
+                }
+            });
+            break;
+        default:
+    }
 
-  return ehrId;
+    return ehrId;
 }
 
 
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
-function napolniPoljeEHR() {
-    document.getElementById("EHRid-vnos").value = "test";
+$(document).ready(function() {
+    generateChart([0,0,0,0,0,0]);
+});
+
+
+function generateChart(values) {
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["", "", "", "", "", ""],
+            datasets: [{
+                label: 'telesna masa',
+                data: values,
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+function generiraj() {
+    for (var i = 0; i < 3; i++) generirajPodatke(i);
+}
+
+function napolniPoljeEHR(st) {
+    
+    document.getElementById("EHRid-vnos").value = generirajPodatke(st);
     document.getElementById("prijava-btn").focus();
 }
