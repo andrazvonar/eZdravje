@@ -68,18 +68,28 @@
 
           <div id="vsebina">
 
-            <div id="kartica" style="display:none" class="w3-card-4">
+            <div id="kartica" style="display:none" class="w3-card-4 w3-animate-opacity">
 
               <header class="w3-container w3-red">
                 <h1 id="ime"></h1>
               </header>
 
               <div class="w3-container w3-padding-8" align="left">
-                <p>ITM: <label id="k-bmi"></label></p>
-                <p>Višina: <label id="k-visina"></label></p>
-                <p>Teža: <label id="k-teza"></label></p>
-                <p>Ocena stanja: <label id="k-ocena"></label></p>
-                <p>Zadnja meritev: <label id="k-datum"></label></p>
+                <p>ITM:
+                  <label id="k-bmi"></label>
+                </p>
+                <p>Višina:
+                  <label id="k-visina"></label>
+                </p>
+                <p>Teža:
+                  <label id="k-teza"></label>
+                </p>
+                <p>Ocena stanja:
+                  <label id="k-ocena"></label>
+                </p>
+                <p>Zadnja meritev:
+                  <label id="k-datum"></label>
+                </p>
               </div>
 
               <footer class="w3-container w3-red w3-padding-4">
@@ -87,10 +97,10 @@
               </footer>
 
             </div>
-            
+
             <div id="kartica-pad" class="w3-padding-16" style="display:none"></div>
 
-            <div id="prijava" class="w3-padding-ver-32" align=left style="padding-bottom:48px">
+            <div id="prijava" class="w3-padding-ver-32 w3-animate-opacity" align=left style="padding-bottom:48px">
               <h2 style="padding-bottom:5px">Prijava</h2>
               <div>
                 <input id="EHRid-vnos" class="w3-input w3-light-grey" type="text" placeholder="EHR id">
@@ -108,7 +118,7 @@
               </div>
             </div>
 
-            <div id="vnos" style="display:none" class="w3-padding-ver-32" align=left>
+            <div id="vnos" style="display:none" class="w3-padding-ver-32 w3-animate-opacity" align=left>
               <h2 style="padding-bottom:5px">Vnos podatkov</h2>
               <div>
                 <input id="masa-vnos" class="w3-input w3-light-grey" type="text" placeholder="Telesna masa">
@@ -139,8 +149,96 @@
 
         </div>
 
-        <div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
-          <h1 class="w3-margin w3-xlarge">Priporočeni recepti</h1>
+        <div class="w3-container w3-khaki w3-center w3-padding-32">
+          <h1 class="w3-margin w3-xlarge">Priporočene diete</h1>
+          <div id="NajprejPrijavit"><h4>Če želite predloge receptov in diet se morate najprej prijaviti.</h4></div>
+          <div class="w3-row-padding w3-center w3-margin-top">
+            <div id="clanek-1" style="display:none" class="w3-animate-opacity w3-third">
+              <div onclick="naloziRecept(0);" class="w3-card-2 w3-padding-top w3-light-grey" style="min-height:460px">
+                <img src="/media/south-beach.jpg" style="width:100%"></img>
+                <h4 class="w3-padding-16">South beach dieta</h4>
+                <p class="w3-padding-left w3-padding-right">
+                  Temelj South beach diete ni nemastna hrana, zmanjševanje vnosa 
+                  ogljikovih hidratov ali zmanjševanje vnosa beljakovin. Dieta uči 
+                  vzpostaviti oziroma doseči uravnoteženo prehrano oziroma...
+                </p>
+              </div>
+            </div>
+            
+            <div class="w3-row-padding w3-center w3-margin-top w3-animate-opacity">
+            <div id="clanek-2" style="display:none" class="w3-animate-opacity w3-third">
+              <div onclick="naloziRecept(1);" class="w3-card-2 w3-padding-top w3-light-grey" style="min-height:460px">
+                <img src="/media/dieta-sadjem.jpg" style="width:100%"></img>
+                <h4 class="w3-padding-16">Dieta s sadjem</h4>
+                <p class="w3-padding-left w3-padding-right">
+                  Prva misel, ki nam pade na pamet ob besedi dieta, je stradanje. 
+                  Vendar to misel kar opustite, saj je neučinkovita in nezdrava!
+                  Dieta s sadjem je vaša rešitev! Ste kdaj pomislili kako idealno bi...
+
+                </p>
+              </div>
+            </div>
+            
+            <div class="w3-row-padding w3-center w3-margin-top w3-animate-opacity">
+            <div id="clanek-3" style="display:none" class="w3-animate-opacity w3-third">
+              <div onclick="naloziRecept(2);" class="w3-card-2 w3-padding-top w3-light-grey" style="min-height:460px">
+                <img src="/media/hitro-hujsanje.jpg" style="width:100%"></img>
+                <h4 class="w3-padding-16">Jedilnik za hitro hujšanje</h4>
+                <p class="w3-padding-left w3-padding-right">
+                  Preden začnemo z izgubo teže moramo telo najprej pripraviti na 
+                  spremembe, kjer poskušamo v 72 urah telo očistiti in sprostiti 
+                  odvečnega...
+                </p>
+              </div>
+            </div>
+            
+             <div class="w3-row-padding w3-center w3-margin-top w3-animate-opacity">
+            <div id="clanek-4" style="display:none" class="w3-animate-opacity w3-half">
+              <div onclick="naloziRecept(3);" class="w3-card-2 w3-padding-top w3-light-grey" style="min-height:460px">
+                <img src="/media/hitro-hujsanje.jpg" style="width:100%"></img>
+                <h4 class="w3-padding-16">12 ways to gain weight</h4>
+                <p class="w3-padding-left w3-padding-right">
+                 In our body image conscious society, it’s rare to actually want to gain weight. But if you’re anything like me, stuck with a high metabolism and lanky frame, it’s really tough to put on any amount of weight.
+                </p>
+              </div>
+            </div>
+            
+             <div class="w3-row-padding w3-center w3-margin-top w3-animate-opacity">
+            <div id="clanek-5" style="display:none" class="w3-animate-opacity w3-half">
+              <div onclick="naloziRecept(4);" class="w3-card-2 w3-padding-top w3-light-grey" style="min-height:460px">
+                <img src="/media/growingmuscles.jpg" style="width:100%"></img>
+                <h4 class="w3-padding-16">Jedilnik za hitro pridobivanje mase</h4>
+                <p class="w3-padding-left w3-padding-right">
+                  Suhci in pridobivanje telesne mase, teže,... Recepti za pripravo slastnih in zdravih jedi, sladic ter napitkov.
+                </p>
+              </div>
+            </div>
+            
+             <div class="w3-row-padding w3-center w3-margin-top w3-animate-opacity">
+            <div id="clanek-6" style="display:none" class="w3-animate-opacity w3-half">
+              <div onclick="naloziRecept(5);" class="w3-card-2 w3-padding-top w3-light-grey" style="min-height:460px">
+                <img src="/media/diet-grocery-bag-400x400.jpg" style="width:100%"></img>
+                <h4 class="w3-padding-16">Everyday Ways to Maintain Your Feel Great Weight</h4>
+                <p class="w3-padding-left w3-padding-right">
+                 Our diet expert clues you in on everyday things you can do to maintain your feel great weight. In the past, I lost weight by being super strict during my...
+                </p>
+              </div>
+            </div>
+            
+             <div class="w3-row-padding w3-center w3-margin-top w3-animate-opacity">
+            <div id="clanek-7" style="display:none" class="w3-animate-opacity w3-half">
+              <div onclick="naloziRecept(6);" class="w3-card-2 w3-padding-top w3-light-grey" style="min-height:460px">
+                <img src="/media/weight-loss-solutions.jpg" style="width:100%"></img>
+                <h4 class="w3-padding-16">9 Secrets of Successful Weight Maintenance</h4>
+                <p class="w3-padding-left w3-padding-right">
+                 Maintaining weight loss takes a different approach than losing the weight. You can do it, and you can make it easier by following advice from people who have been there and kept the pounds off for years...
+                </p>
+              </div>
+            </div>
+
+  
+          </div>
+
         </div>
 
       </div>

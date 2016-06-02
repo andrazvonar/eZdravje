@@ -173,7 +173,7 @@ function dodajMeritve(ehrId, datumInUra, telesnaTeza, telesnaVisina, merilec) {
     if (!ehrId || ehrId.trim().length == 0) {
         $("#dodajMeritveVitalnihZnakovSporocilo").html("<span class='obvestilo " +
             "label label-warning fade-in'>Prosim vnesite zahtevane podatke!</span>");
-            console.log("ERR")
+        console.log("ERR")
     }
     else {
         $.ajaxSetup({
@@ -202,7 +202,6 @@ function dodajMeritve(ehrId, datumInUra, telesnaTeza, telesnaVisina, merilec) {
             contentType: 'application/json',
             data: JSON.stringify(podatki),
             success: function(res) {
-                console.log("Dodana meritev " + telesnaTeza+ " " + telesnaVisina);
                 $("#dodajMeritveVitalnihZnakovSporocilo").html(
                     "<span class='obvestilo label label-success fade-in'>" +
                     res.meta.href + ".</span>");
@@ -465,7 +464,6 @@ function prijavaUporabnika() {
                 teze[i] = results[i].weight;
             }
         }
-        console.log(teze);
 
         preberiMeritveVisine(CURRENTID, function(visine) {
             var visina = visine[0].height;
@@ -476,20 +474,45 @@ function prijavaUporabnika() {
             document.getElementById("BMI-sprememba").innerHTML = Math.abs(Math.round((bmi / BMI(teze[1], visina) - 1) * 100)) + "%";
 
             if (bmi < 18.5) {
+                document.getElementById("NajprejPrijavit").style.display = "none";
                 document.getElementById("k-ocena").innerHTML = "Podhranjenost";
+                document.getElementById("clanek-4").style.display = "initial";
+                document.getElementById("clanek-4").style.cursor = "pointer";
+                document.getElementById("clanek-5").style.display = "initial";
+                document.getElementById("clanek-5").style.cursor = "pointer";
             }
             else if (bmi < 24.5) {
                 document.getElementById("k-ocena").innerHTML = "Normalno";
+                document.getElementById("NajprejPrijavit").style.display = "none";
+                document.getElementById("clanek-6").style.display = "initial";
+                document.getElementById("clanek-6").style.cursor = "pointer";
+                document.getElementById("clanek-7").style.display = "initial";
+                document.getElementById("clanek-7").style.cursor = "pointer";
             }
             else if (bmi < 29.9) {
                 document.getElementById("k-ocena").innerHTML = "Povišana teža";
+                document.getElementById("k-ocena").innerHTML = "Kolega, debel si"
+                document.getElementById("NajprejPrijavit").style.display = "none";
+                document.getElementById("clanek-1").style.display = "initial";
+                document.getElementById("clanek-1").style.cursor = "pointer";
+                document.getElementById("clanek-2").style.display = "initial";
+                document.getElementById("clanek-2").style.cursor = "pointer";
+                document.getElementById("clanek-3").style.display = "initial";
+                document.getElementById("clanek-3").style.cursor = "pointer";
             }
             else {
                 document.getElementById("k-ocena").innerHTML = "Kolega, debel si"
+                document.getElementById("NajprejPrijavit").style.display = "none";
+                document.getElementById("clanek-1").style.display = "initial";
+                document.getElementById("clanek-1").style.cursor = "pointer";
+                document.getElementById("clanek-2").style.display = "initial";
+                document.getElementById("clanek-2").style.cursor = "pointer";
+                document.getElementById("clanek-3").style.display = "initial";
+                document.getElementById("clanek-3").style.cursor = "pointer";
+
             }
         });
 
-        document.getElementById("k-visina").innerHTML = "cm";
         document.getElementById("k-teza").innerHTML = teze[0] + "kg";
         document.getElementById("k-datum").innerHTML = results[0].time.slice(0, 10);
         generateChart(teze.reverse());
@@ -505,6 +528,11 @@ function odjava() {
     document.getElementById("trenutni-BMI").innerHTML = "--.-";
     document.getElementById("BMI-sprememba").innerHTML = "--%";
     document.getElementById("EHRid-vnos").value = "";
+    document.getElementById("NajprejPrijavit").style.display = "block";
+    for (var i = 1; i <= 5; i++) {
+        document.getElementById("clanek-" + i).style.cursor = "default";
+        document.getElementById("clanek-" + i).style.display = "none";
+    }
     generateChart([0, 0, 0, 0, 0, 0]);
 }
 
@@ -517,8 +545,33 @@ function dodajNovoMeritev() {
     var telesnaTeza = document.getElementById("masa-vnos").value;
     var telesnaVisina = document.getElementById("visina-vnos").value;
     var d = new Date();
-    var date = d.getFullYear() + "-" + (d.getMonth() + 1)+ "-" + d.getDate() + "T" + d.getHours() + ":" + d.getMinutes();
+    var date = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate() + "T" + d.getHours() + ":" + d.getMinutes();
     dodajMeritve(CURRENTID, date, telesnaTeza, telesnaVisina, "Samo");
     document.getElementById("masa-vnos").value = "";
     document.getElementById("visina-vnos").value = "";
+}
+
+function naloziRecept(st) {
+    switch (st) {
+        case 0:
+            window.location.href = "http://www.hujsaj-zdravo.si/hujsanje/shujsevalne_diete/south-beach-dieta/";
+            break;
+        case 1:
+            window.location.href = "http://www.hujsaj-zdravo.si/hujsanje/shujsevalne_diete/dieta_s_sadjem/";
+            break;
+        case 2:
+            window.location.href = "http://www.hujsaj-zdravo.si/hujsanje/shujsevalne_diete/jedilnik_za_hitro_hujsanje/";
+            break;
+        case 3:
+            window.location.href = "http://www.gainingweight101.com/healthy-cheap-foods-to-gain-weight/";
+            break;
+        case 4:
+            window.location.href = "http://www.hujsaj-zdravo.si/sport_in_vadba/prehrana_sportnika/jedilnik_za_pridobivanje_misicne_mase/";
+            break;
+        case 5:
+            window.location.href = "http://www.health.com/health/gallery/0,,20578117,00.html";
+            break;
+        case 6:
+            window.location.href = "http://www.webmd.com/diet/obesity/maintain-weight-loss";
+    }
 }
