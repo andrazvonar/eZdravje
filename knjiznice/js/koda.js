@@ -47,7 +47,7 @@ function generirajPodatke(stPacienta, callback) {
                     ehrId = data.ehrId;
                     var partyData = {
                         firstNames: "Andraž",
-                        lastNames: "Zvonar",
+                        lastNames: "Zver",
                         dateOfBirth: "1996-02-23T18:08",
                         gender: "MALE",
                         partyAdditionalInfo: [{
@@ -91,9 +91,9 @@ function generirajPodatke(stPacienta, callback) {
                 success: function(data) {
                     ehrId = data.ehrId;
                     var partyData = {
-                        firstNames: "Andraz",
-                        lastNames: "Zvonar",
-                        dateOfBirth: "1996-02-23T18:08",
+                        firstNames: "Miran",
+                        lastNames: "Mlakar",
+                        dateOfBirth: "1976-03-03T11:01",
                         partyAdditionalInfo: [{
                             key: "ehrId",
                             value: ehrId
@@ -134,9 +134,9 @@ function generirajPodatke(stPacienta, callback) {
                 success: function(data) {
                     ehrId = data.ehrId;
                     var partyData = {
-                        firstNames: "Andraz",
-                        lastNames: "Zvonar",
-                        dateOfBirth: "1996-02-23T18:08",
+                        firstNames: "Tanja",
+                        lastNames: "Kranjc",
+                        dateOfBirth: "1987-08-21T18:08",
                         partyAdditionalInfo: [{
                             key: "ehrId",
                             value: ehrId
@@ -170,10 +170,10 @@ function generirajPodatke(stPacienta, callback) {
 
 function dodajMeritve(ehrId, datumInUra, telesnaTeza, telesnaVisina, merilec) {
     var sessionId = getSessionId();
-
     if (!ehrId || ehrId.trim().length == 0) {
         $("#dodajMeritveVitalnihZnakovSporocilo").html("<span class='obvestilo " +
             "label label-warning fade-in'>Prosim vnesite zahtevane podatke!</span>");
+            console.log("ERR")
     }
     else {
         $.ajaxSetup({
@@ -202,6 +202,7 @@ function dodajMeritve(ehrId, datumInUra, telesnaTeza, telesnaVisina, merilec) {
             contentType: 'application/json',
             data: JSON.stringify(podatki),
             success: function(res) {
+                console.log("Dodana meritev " + telesnaTeza+ " " + telesnaVisina);
                 $("#dodajMeritveVitalnihZnakovSporocilo").html(
                     "<span class='obvestilo label label-success fade-in'>" +
                     res.meta.href + ".</span>");
@@ -405,24 +406,40 @@ var EHRids = ["", "", ""];
 function generiraj() {
     generirajPodatke(1, function(ehrId) {
         EHRids[0] = ehrId;
-        console.log(ehrId);
+        dodajMeritve(ehrId, "2016-1-2T21:17", 60, 186, "Jožica");
+        dodajMeritve(ehrId, "2016-2-2T21:17", 65, 186, "Jožica");
+        dodajMeritve(ehrId, "2016-3-2T21:17", 67, 186, "Jožica");
+        dodajMeritve(ehrId, "2016-4-2T21:17", 73, 186, "Jožica");
+        dodajMeritve(ehrId, "2016-5-2T21:17", 68, 186, "Jožica");
+        dodajMeritve(ehrId, "2016-6-2T21:17", 74, 186, "Jožica");
     });
     generirajPodatke(2, function(ehrId) {
         EHRids[1] = ehrId;
+        dodajMeritve(ehrId, "2016-1-2T21:17", 90, 178, "Tine");
+        dodajMeritve(ehrId, "2016-2-2T21:17", 88, 178, "Tine");
+        dodajMeritve(ehrId, "2016-3-2T21:17", 80, 178, "Tine");
+        dodajMeritve(ehrId, "2016-4-2T21:17", 78, 178, "Tine");
+        dodajMeritve(ehrId, "2016-5-2T21:17", 85, 178, "Tine");
+        dodajMeritve(ehrId, "2016-5-31T21:17", 102, 178, "Tine");
     });
     generirajPodatke(3, function(ehrId) {
         EHRids[2] = ehrId;
+        dodajMeritve(ehrId, "2016-1-2T21:17", 70, 170, "Samo");
+        dodajMeritve(ehrId, "2016-2-2T21:17", 70, 170, "Samo");
+        dodajMeritve(ehrId, "2016-3-2T21:17", 60, 170, "Samo");
+        dodajMeritve(ehrId, "2016-4-2T21:17", 58, 170, "Samo");
+        dodajMeritve(ehrId, "2016-5-2T21:17", 55, 170, "Samo");
+        dodajMeritve(ehrId, "2016-6-1T21:17", 49, 170, "Samo");
     });
 
 }
-
 
 function napolniPoljeEHR(st) {
     document.getElementById("EHRid-vnos").value = EHRids[st];
     document.getElementById("prijava-btn").focus();
 }
 
-var CURRENTID = "f12baecf - 04 ca - 4705 - ab14 - 6 d0c3367ed4b";
+var CURRENTID = "";
 
 function prijavaUporabnika() {
     CURRENTID = document.getElementById("EHRid-vnos").value;
@@ -447,6 +464,7 @@ function prijavaUporabnika() {
                 teze[i] = results[i].weight;
             }
         }
+        console.log(teze);
 
         preberiMeritveVisine(CURRENTID, function(visine) {
             var visina = visine[0].height;
@@ -466,7 +484,7 @@ function prijavaUporabnika() {
                 document.getElementById("k-ocena").innerHTML = "Povišana teža";
             }
             else {
-                document.getElementById("k-ocena").innerHTML = "Debeluhar"
+                document.getElementById("k-ocena").innerHTML = "Kolega, debel si"
             }
         });
 
@@ -498,7 +516,6 @@ function dodajNovoMeritev() {
     var telesnaVisina = document.getElementById("visina-vnos").value;
     var d = new Date();
     var date = d.getFullYear() + "-" + (d.getMonth() + 1)+ "-" + d.getDate() + "T" + d.getHours() + ":" + d.getMinutes();
-    console.log(date);
     dodajMeritve(CURRENTID, date, telesnaTeza, telesnaVisina, "Samo");
     document.getElementById("masa-vnos").value = "";
     document.getElementById("visina-vnos").value = "";
