@@ -422,7 +422,7 @@ function napolniPoljeEHR(st) {
     document.getElementById("prijava-btn").focus();
 }
 
-var CURRENTID = "f12baecf-04ca-4705-ab14-6d0c3367ed4b";
+var CURRENTID = "f12baecf - 04 ca - 4705 - ab14 - 6 d0c3367ed4b";
 
 function prijavaUporabnika() {
     CURRENTID = document.getElementById("EHRid-vnos").value;
@@ -436,7 +436,6 @@ function prijavaUporabnika() {
 
     var teze = [0, 0, 0, 0, 0, 0];
     preberiMeritveTeze(CURRENTID, function(results) {
-        console.log(results);
         var zadnja = results.length - 1;
         if (results.length >= 6) {
             for (var i = 0; i < 6; i++) {
@@ -450,28 +449,26 @@ function prijavaUporabnika() {
         }
 
         preberiMeritveVisine(CURRENTID, function(visine) {
-            console.log(results);
             var visina = visine[0].height;
-            var bmi = BMI(teze[0], visina)
+            var bmi = BMI(teze[5], visina)
             document.getElementById("k-bmi").innerHTML = bmi;
             document.getElementById("k-visina").innerHTML = visina + "cm";
             document.getElementById("trenutni-BMI").innerHTML = bmi;
             document.getElementById("BMI-sprememba").innerHTML = Math.abs(Math.round((bmi / BMI(teze[1], visina) - 1) * 100)) + "%";
-            
-            if (bmi < 18.5) {
-            document.getElementById("k-ocena").innerHTML = "Podhranjenost";
-        }
-        else if (bmi < 24.5) {
-            document.getElementById("k-ocena").innerHTML = "Normalno";
-        }
-        else if (bmi < 29.9) {
-            document.getElementById("k-ocena").innerHTML = "Povišana teža";
-        }
-        else {
-            document.getElementById("k-ocena").innerHTML = "Debeluhar"
-        }
-        });
 
+            if (bmi < 18.5) {
+                document.getElementById("k-ocena").innerHTML = "Podhranjenost";
+            }
+            else if (bmi < 24.5) {
+                document.getElementById("k-ocena").innerHTML = "Normalno";
+            }
+            else if (bmi < 29.9) {
+                document.getElementById("k-ocena").innerHTML = "Povišana teža";
+            }
+            else {
+                document.getElementById("k-ocena").innerHTML = "Debeluhar"
+            }
+        });
 
         document.getElementById("k-visina").innerHTML = "cm";
         document.getElementById("k-teza").innerHTML = teze[0] + "kg";
@@ -500,7 +497,8 @@ function dodajNovoMeritev() {
     var telesnaTeza = document.getElementById("masa-vnos").value;
     var telesnaVisina = document.getElementById("visina-vnos").value;
     var d = new Date();
-    var date = d.getFullYear() + "-" + d.getMonth() + "-" + d.getDay() + "T" + d.getHours() + ":" + d.getMinutes();
+    var date = d.getFullYear() + "-" + (d.getMonth() + 1)+ "-" + d.getDate() + "T" + d.getHours() + ":" + d.getMinutes();
+    console.log(date);
     dodajMeritve(CURRENTID, date, telesnaTeza, telesnaVisina, "Samo");
     document.getElementById("masa-vnos").value = "";
     document.getElementById("visina-vnos").value = "";
