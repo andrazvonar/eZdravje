@@ -46,9 +46,10 @@ function generirajPodatke(stPacienta, callback) {
                 success: function(data) {
                     ehrId = data.ehrId;
                     var partyData = {
-                        firstNames: "Andraz",
+                        firstNames: "Andraž",
                         lastNames: "Zvonar",
                         dateOfBirth: "1996-02-23T18:08",
+                        gender: "MALE",
                         partyAdditionalInfo: [{
                             key: "ehrId",
                             value: ehrId
@@ -68,6 +69,7 @@ function generirajPodatke(stPacienta, callback) {
                             }
                         },
                         error: function(err) {
+                            console.log("NAPAKA");
                             $("#kreirajSporocilo").html("<span class='obvestilo label " +
                                 "label-danger fade-in'>Napaka '" +
                                 JSON.parse(err.responseText).userMessage + "'!");
@@ -166,6 +168,82 @@ function generirajPodatke(stPacienta, callback) {
     return ehrId;
 }
 
+function dodajMeritve(ehrId, datumInUra, telesnaTeza, telesnaVisina, merilec) {
+	var sessionId = getSessionId();
+
+	if (!ehrId || ehrId.trim().length == 0) {
+		$("#dodajMeritveVitalnihZnakovSporocilo").html("<span class='obvestilo " +
+      "label label-warning fade-in'>Prosim vnesite zahtevane podatke!</span>");
+	} else {
+		$.ajaxSetup({
+		    headers: {"Ehr-Session": sessionId}
+		});
+		var podatki = {
+			// Struktura predloge je na voljo na naslednjem spletnem naslovu:
+      // https://rest.ehrscape.com/rest/v1/template/Vital%20Signs/example
+		    "ctx/language": "en",
+		    "ctx/territory": "SI",
+		    "ctx/time": datumInUra,
+		    "vital_signs/height_length/any_event/body_height_length": telesnaVisina,
+		    "vital_signs/body_weight/any_event/body_weight": telesnaTeza,
+		};
+		var parametriZahteve = {
+		    ehrId: ehrId,
+		    templateId: 'Vital Signs',
+		    format: 'FLAT',
+		    committer: merilec
+		};
+		$.ajax({
+		    url: baseUrl + "/composition?" + $.param(parametriZahteve),
+		    type: 'POST',
+		    contentType: 'application/json',
+		    data: JSON.stringify(podatki),
+		    success: function (res) {
+		        $("#dodajMeritveVitalnihZnakovSporocilo").html(
+              "<span class='obvestilo label label-success fade-in'>" +
+              res.meta.href + ".</span>");
+		    },
+		    error: function(err) {
+		    	$("#dodajMeritveVitalnihZnakovSporocilo").html(
+            "<span class='obvestilo label label-danger fade-in'>Napaka '" +
+            JSON.parse(err.responseText).userMessage + "'!");
+		    }
+		});
+	}
+}
+
+function preberiEHRodBolnika(ehrId, callback) {
+    var sessionId = getSessionId();
+
+    if (false) {
+        $("#preberiSporocilo").html("<span class='obvestilo label label-warning " +
+            "fade-in'>Prosim vnesite zahtevan podatek!");
+    }
+    else {
+        $.ajax({
+            url: baseUrl + "/demographics/ehr/" + ehrId + "/party",
+            type: 'GET',
+            headers: {
+                "Ehr-Session": sessionId
+            },
+            success: function(data) {
+                var party = data.party;
+                callback(party);
+                $("#preberiSporocilo").html("<span class='obvestilo label " +
+                    "label-success fade-in'>Bolnik '" + party.firstNames + " " +
+                    party.lastNames + "', ki se je rodil '" + party.dateOfBirth +
+                    "'.</span>");
+            },
+            error: function(err) {
+                console.log("NAPAKA")
+                $("#preberiSporocilo").html("<span class='obvestilo label " +
+                    "label-danger fade-in'>Napaka '" +
+                    JSON.parse(err.responseText).userMessage + "'!");
+            }
+        });
+    }
+}
+
 
 // TODO: Tukaj implementirate funkcionalnost, ki jo podpira vaša aplikacija
 $(document).ready(function() {
@@ -216,15 +294,16 @@ function generateChart(values) {
 var EHRids = ["", "", ""];
 
 function generiraj() {
-        generirajPodatke(1, function(ehrId) {
-            EHRids[0] = ehrId;
-        });
-        generirajPodatke(2, function(ehrId) {
-            EHRids[1] = ehrId;
-        });
-        generirajPodatke(3, function(ehrId) {
-            EHRids[2] = ehrId;
-        });
+    generirajPodatke(1, function(ehrId) {
+        EHRids[0] = ehrId;
+        console.log(ehrId);
+    });
+    generirajPodatke(2, function(ehrId) {
+        EHRids[1] = ehrId;
+    });
+    generirajPodatke(3, function(ehrId) {
+        EHRids[2] = ehrId;
+    });
 
 }
 
@@ -234,16 +313,22 @@ function napolniPoljeEHR(st) {
     document.getElementById("prijava-btn").focus();
 }
 
+var CURRENTID;
+
 function prijavaUporabnika() {
-    var id = $('#EHR-vnos');
-    posodobiPodatke([10, 20, 30, 40, 70, 60], 186);
-    document.getElementById("ime").innerHTML = "Andraž Zvonar";
-    document.getElementById("kartica").style.display = "block";
-    document.getElementById("kartica-pad").style.display = "block";
-    document.getElementById("prijava").style.display = "none";
+    CURRENTID = document.getElementById("EHRid-vnos").value;
+    preberiEHRodBolnika(CURRENTID, function(party) {
+        posodobiPodatke([10, 20, 30, 40, 70, 60], 186);
+        document.getElementById("ime").innerHTML = party.firstNames + " " + party.lastNames;
+        document.getElementById("kartica").style.display = "block";
+        document.getElementById("kartica-pad").style.display = "block";
+        document.getElementById("prijava").style.display = "none";
+    });
+
 }
 
 function odjava() {
+    CURRENTID = "";
     document.getElementById("kartica").style.display = "none";
     document.getElementById("kartica-pad").style.display = "none";
     document.getElementById("prijava").style.display = "block";
@@ -261,4 +346,12 @@ function posodobiPodatke(teze, visina) {
 
 function BMI(teza, visina) {
     return Math.round((teza / ((visina / 100) * (visina / 100)) * 10)) / 10;
+}
+
+function dodajNovoMeritev() {
+    var telesnaTeza = document.getElementById("masa-vnos").value;
+    var telesnaVisina = document.getElementById("visina-vnos").value;
+    var d = new Date();
+    var date = d.getFullYear()+"."+d.getMonth()+"."+d.getDay()+"T"+d.getMinutes()+d.getMinutes();
+    dodajMeritve(CURRENTID, date, telesnaTeza, telesnaVisina, "Samo");
 }

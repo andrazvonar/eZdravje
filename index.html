@@ -75,7 +75,11 @@
               </header>
 
               <div class="w3-container w3-padding-8" align="left">
-                <p>Podatki...</p>
+                <p>BMI:</p>
+                <p>Starost:</p>
+                <p>Teža:</p>
+                <p>Ocena stanja:</p>
+                <p>zadnja meritev:</p>
               </div>
 
               <footer class="w3-container w3-red w3-padding-4">
@@ -107,10 +111,10 @@
             <div id="vnos" class="w3-padding-ver-32" align=left>
               <h2 style="padding-bottom:5px">Vnos podatkov</h2>
               <div>
-                <input id="EHRid-vnos" class="w3-input w3-light-grey" type="text" placeholder="Telesna masa">
-                <input id="EHRid-vnos" class="w3-input w3-light-grey" type="text" placeholder="Višina" style="padding-top:20px">
+                <input id="masa-vnos" class="w3-input w3-light-grey" type="text" placeholder="Telesna masa">
+                <input id="visina-vnos" class="w3-input w3-light-grey" type="text" placeholder="Višina" style="padding-top:20px">
                 <div class=" w3-padding-16">
-                  <button id="prijava-btn" class="w3-btn w3-red">Dodaj vnos</button>
+                  <button id="prijava-btn" class="w3-btn w3-red" onclick="dodajNovoMeritev()">Dodaj vnos</button>
                 </div>
               </div>
             </div>
