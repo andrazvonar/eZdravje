@@ -529,7 +529,7 @@ function odjava() {
     document.getElementById("BMI-sprememba").innerHTML = "--%";
     document.getElementById("EHRid-vnos").value = "";
     document.getElementById("NajprejPrijavit").style.display = "block";
-    for (var i = 1; i <= 5; i++) {
+    for (var i = 1; i <= 7; i++) {
         document.getElementById("clanek-" + i).style.cursor = "default";
         document.getElementById("clanek-" + i).style.display = "none";
     }
@@ -552,26 +552,6 @@ function dodajNovoMeritev() {
 }
 
 function naloziRecept(st) {
-    switch (st) {
-        case 0:
-            window.location.href = "http://www.hujsaj-zdravo.si/hujsanje/shujsevalne_diete/south-beach-dieta/";
-            break;
-        case 1:
-            window.location.href = "http://www.hujsaj-zdravo.si/hujsanje/shujsevalne_diete/dieta_s_sadjem/";
-            break;
-        case 2:
-            window.location.href = "http://www.hujsaj-zdravo.si/hujsanje/shujsevalne_diete/jedilnik_za_hitro_hujsanje/";
-            break;
-        case 3:
-            window.location.href = "http://www.gainingweight101.com/healthy-cheap-foods-to-gain-weight/";
-            break;
-        case 4:
-            window.location.href = "http://www.hujsaj-zdravo.si/sport_in_vadba/prehrana_sportnika/jedilnik_za_pridobivanje_misicne_mase/";
-            break;
-        case 5:
-            window.location.href = "http://www.health.com/health/gallery/0,,20578117,00.html";
-            break;
-        case 6:
-            window.location.href = "http://www.webmd.com/diet/obesity/maintain-weight-loss";
-    }
+    var text = document.getElementById("text-" + st);
+    text.style.display = text.style.display == "initial" ? "none" : "initial";
 }
